@@ -2,11 +2,11 @@ import praw
 import json
 from pprint import pprint
 
-id = "_A9_qXJrlNxXExhn-ZK8RQ"
-secret = "VD0ySjDluZgk74q00tGe_HX-whWZwg"
-ps= ""
-ua = "first_app"
-name = "__special"
+id = "the id"
+secret = "the secret key"
+ps= "Your password here"
+ua = "Your app name"
+name = "your Username"
 
 reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, username= name, password = ps)
 
