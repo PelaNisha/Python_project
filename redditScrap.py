@@ -10,6 +10,14 @@ name = "your Username"
 
 reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, username= name, password = ps)
 
+#see all the properties of data
+# subred = reddit.subreddit("learnpython")
+# hot = subred.hot(limit=10)
+# x = next(hot)
+# print(dir(x))
+
+
+
 def search_for(item, l):
 	# options = ['hot', 'new', 'controv', 'top', 'gildsed']
 	# o = options[choice-1]
