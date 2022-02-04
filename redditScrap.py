@@ -4,11 +4,11 @@ import json
 from pprint import pprint
 import time
 
-id = "_A9_qXJrlNxXExhn-ZK8RQ"
-secret = "VD0ySjDluZgk74q00tGe_HX-whWZwg"
-ps= "songjoongki"
-ua = "first_app"
-name = "__special"
+id = "app id"
+secret = "app secret key"
+ps= "Your password"
+ua = "App name"
+name = "your user name"
 
 reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, username= name, password = ps)
 
