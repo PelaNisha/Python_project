@@ -16,7 +16,16 @@ reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, use
 # x = next(hot)
 # print(dir(x))
 
-
+# comment reply as a bot
+# for submission in subred.hot(limit = 10):
+#     for comment in submission.comments:
+#         if hasattr(comment, "body"):
+#             comment_lower = comment.body.lower()
+#             if "is" in comment_lower:
+#                 print(submission.url)
+#                 # print(comment.body)
+#                 comment.reply("This is a reply from another puppet")
+#                 # time.sleep(660) ##to delay the next comment reply
 
 def search_for(item, l):
 	# options = ['hot', 'new', 'controv', 'top', 'gildsed']
