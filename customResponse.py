@@ -24,6 +24,15 @@ def fs():
 				'stars':k['stars'],
 			}
 			mst.append(char)
+# 		if you want to filter with some conditions
+# 		if k['numberOfReviews']>1000 and k['stars']>4:
+# 			char = {
+#				'name':k['displayName'],
+# 				'trustScore':k['trustScore'],
+# 				'numberOfReviews':k['numberOfReviews'],
+# 				'stars':k['stars'],
+# 				}
+# 			mst.append(char)
 	return mst
 fin = fs()
 pprint(fin) 
