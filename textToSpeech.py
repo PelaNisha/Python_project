@@ -1,7 +1,7 @@
 import gtts  
 from playsound import playsound  
 
-a = open('botalk.txt', 'r')
+a = open('fileName.txt', 'r')
 # slow = False
 t1 = gtts.gTTS(a.read(), slow=False) 
 
