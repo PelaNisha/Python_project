@@ -1,4 +1,4 @@
-import gtts  
+import gtts  #api for text to speech conversion
 from playsound import playsound  
 
 a = open('fileName.txt', 'r')
