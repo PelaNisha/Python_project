@@ -36,6 +36,12 @@ def comment_reply(topic,word):
                     comment.reply("Reply from a puppet")
                     time.sleep(660)
 
+# to get the latest comments
+def comment_search(topic,word):
+	subred = reddit.subreddit(topic)
+	# for submission in subred.hot(limit = 10):
+	for c in subred.stream.comments(skip_existing=True):
+		print(c.body)
               
 
 choice = int(input("Enter your option:\n1.scrape data\n2.reply to comment\n"))
