@@ -42,7 +42,32 @@ def comment_search(topic,word):
 	# for submission in subred.hot(limit = 10):
 	for c in subred.stream.comments(skip_existing=True):
 		print(c.body)
-              
+
+def subm(topic):
+	subred = reddit.subreddit(topic)
+	for submission in subred.hot(limit=5):
+		print("Title: ", submission.title)
+		print("url: ", submission.url)
+		print("Auther: ", submission.author)
+		print("total comments: ", submission.num_comments)
+		print("Num of subs: ", submission.subreddit_subscribers)
+		print("Score: ", submission.score)
+
+		print("---------------------------------\n")
+
+		
+def finDThePost(topic, name):
+	subred = reddit.subreddit(topic)
+	for submission in subred.hot(limit=100):
+		if submission.author == name:
+			print("Title: ", submission.title)
+			print("url: ", submission.url)
+		# print("Auther: ", submission.author)
+			print("total comments: ", submission.num_comments)
+		# print("Num of subs: ", submission.subreddit_subscribers)
+			print("Score: ", submission.score)
+
+			print("---------------------------------\n")		
 
 choice = int(input("Enter your option:\n1.scrape data\n2.reply to comment\n"))
 
