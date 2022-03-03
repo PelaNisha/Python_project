@@ -4,10 +4,10 @@ from pprint import pprint
 import time
 import re #regular expression
 
-id = "_A9_qXJrlNxXExhn-ZK8RQ"
-secret = "VD0ySjDluZgk74q00tGe_HX-whWZwg"
-ps= "songjoongki"
-ua = "first_app"
+id = ""
+secret = ""
+ps= ""
+ua = ""
 
 
 
@@ -16,11 +16,9 @@ name = "__special"
 reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, username= name, password = ps)
 topic = 'withyoualways'
 
-item= ['https://','www.']
-
 def search_for():
 	lst=[]
-	red = reddit.subreddit('withyoualways')
+	red = reddit.subreddit(topic)
 	for i in red.hot(limit=3):
 		char ={
 			'title':i.title,
