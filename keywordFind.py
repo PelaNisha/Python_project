@@ -15,6 +15,7 @@ name = ""
 reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, username= name, password = ps)
 topic = 'withyoualways'
 
+
 def search_for(topic):
 	lst=[]
 	red = reddit.subreddit(topic)
@@ -28,18 +29,19 @@ def search_for(topic):
 
 def subm(topic):
 	count = 0
+	comment_lower = ""
 	subred = reddit.subreddit(topic)
 	for submission in subred.hot(limit=2):
 		# print(type(submission))
 		for comment in submission.comments:
 			if hasattr(comment, "body") and count<10:
-				comment_lower = comment.body.lower()
-				if Find(comment_lower) :
-					with open("myfile.txt", "a+") as file1:
+				comment_lo = comment.body.lower()
+				with open("myfile.txt", "a+") as file1:
 						# Writing data to a file
-						file1.write(comment_lower+'\n')
+					comment_lower = comment_lower + " "+comment_lo
+					file1.write(comment_lower)
 					# print(comment.body)
-						count= count+1
+					count= count+1
 				
 						# comment.reply("Reply from a puppet")
 						# time.sleep(660)
