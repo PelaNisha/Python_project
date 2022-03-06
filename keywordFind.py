@@ -6,11 +6,11 @@ import re #regular expression
 from collections import Counter
 
 
-id = "_A9_qXJrlNxXExhn-ZK8RQ"
-secret = "VD0ySjDluZgk74q00tGe_HX-whWZwg"
-ps= "songjoongki"
-ua = "first_app"
-name = "__special"
+id = ""
+secret = ""
+ps= ""
+ua = ""
+name = ""
 
 reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, username= name, password = ps)
 topic = 'withyoualways'
