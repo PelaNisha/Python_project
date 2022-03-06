@@ -16,6 +16,7 @@ reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, use
 topic = 'withyoualways'
 
 
+
 def search_for(topic):
 	lst=[]
 	red = reddit.subreddit(topic)
@@ -56,13 +57,21 @@ def keyRead():
 	return (str(li))
 
 def splt(a):
+	my_dict = {}
 	words = a.split()
 	word_counts = Counter(words)
 	for word, count in sorted(word_counts.items()):
-		print('"%s" is repeated %d time%s.' % (word, count, "s" if count > 1 else ""))
+		my_dict[word] = [count]
+		# my_dict
+		# print('"%s" is repeated %d time%s.' % (word, count, "s" if count > 1 else ""))
 	# print(max(count))
-
+	return my_dict
 	
+def sortD(d):
+	sort_orders = sorted(d.items(), key=lambda x: x[1], reverse=True)
+	for i in sort_orders:
+		print(i[0], i[1])
+
 def Find(string):
 	# findall() has been used to match string to url format
 	regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
@@ -73,4 +82,8 @@ a = input("enter the topic: ")
 subm(a)
 # print(b)
 c = keyRead()
-splt(c)
+# print(type(splt(c)))
+d = splt(c)
+# print(d)
+sortD(d)
+# print(f)
