@@ -1,27 +1,19 @@
-from gettext import find
-from html5lib import serialize
 import praw
-import nltk
-from nltk.corpus import stopwords
-from pprint import pprint
-import re #regular expression
+from nltk.corpus import stopwords 					#import stopwords
+import re 								#regular expression
 from collections import Counter
-
-from sqlalchemy import null
-
 
 id = ""
 secret = ""
-ps= ""
+ps= "s"
 ua = ""
 name = ""
 
 reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, username= name, password = ps)
-topic = 'withyoualways'
 
 stop_words = set(stopwords.words('english'))
 
-def search_for(topic):
+def search_for(topic): 							#function to return title and url for subreddit posts
 	lst=[]
 	red = reddit.subreddit(topic)
 	for i in red.hot(limit=3):
@@ -32,63 +24,49 @@ def search_for(topic):
 		lst.append(char)
 	return lst	
 
-def subm(topic):
-	count = 0
+def subm(topic):							#function to write the 10 comments from each post to a file
+	count = 0							#and convert comments to a large string
 	comment_lower = ""
 	subred = reddit.subreddit(topic)
 	for submission in subred.hot(limit=2):
-		# print(type(submission))
 		for comment in submission.comments:
 			if hasattr(comment, "body") and count<10:
 				comment_lo = comment.body.lower()
 				with open("myfile.txt", "a+") as file1:
-						# Writing data to a file
 					comment_lower = comment_lower + " "+comment_lo
 					file1.write(comment_lower)
-					# print(comment.body)
 					count= count+1
-				
-						# comment.reply("Reply from a puppet")
-						# time.sleep(660)
 		print("*****************")
 		count=0
 
-def keyRead():
+def keyRead():								#function to convert the string to a list of items
 	li = []
 	with open("myfile.txt", "r+") as file1:
 		# print(file1.read())
 		li.append(file1.read())
 	return (str(li))
 
-def splt(a):
+def splt(a):								#function to create the dict of words and their count
 	my_dict = {}
 	words = a.split()
 	word_counts = Counter(words)
 	for word, count in sorted(word_counts.items()):
 		if word not in stop_words:
 			my_dict[word] = [count]
-		# my_dict
-		# print('"%s" is repeated %d time%s.' % (word, count, "s" if count > 1 else ""))
-	# print(max(count))
 	return my_dict
 	
-def sortD(d):
+def sortD(d):								#function to sort dict by value in descending order
 	sort_orders = sorted(d.items(), key=lambda x: x[1], reverse=True)
 	for i in sort_orders:
 		print(i[0], i[1])
 
-def Find(string):
-	# findall() has been used to match string to url format
+def Find(string):							#funtion to return is a comment contains a url
 	regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
-	url = re.findall(regex,string)      
+	url = re.findall(regex,string)      				# findall() has been used to match string to url format
 	return [x[0] for x in url]
 
-a = input("enter the topic: ")
-subm(a)
-# print(b)
-c = keyRead()
-# print(type(splt(c)))
-d = splt(c)
-# print(d)
-sortD(d)
-# print(f)
+subr = input("enter the topic: ")					#input the subreddit
+subm(subr)								#parse top 10 comments and convert them to single string
+str_list = keyRead()							#create list of string item
+d = splt(str_list)							#return dict with keys and their count
+sortD(d)								#print the keys with value in descendin order
