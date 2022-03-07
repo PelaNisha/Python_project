@@ -1,9 +1,13 @@
 from gettext import find
 from html5lib import serialize
 import praw
+import nltk
+from nltk.corpus import stopwords
 from pprint import pprint
 import re #regular expression
 from collections import Counter
+
+from sqlalchemy import null
 
 
 id = ""
@@ -15,7 +19,7 @@ name = ""
 reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, username= name, password = ps)
 topic = 'withyoualways'
 
-
+stop_words = set(stopwords.words('english'))
 
 def search_for(topic):
 	lst=[]
@@ -61,7 +65,8 @@ def splt(a):
 	words = a.split()
 	word_counts = Counter(words)
 	for word, count in sorted(word_counts.items()):
-		my_dict[word] = [count]
+		if word not in stop_words:
+			my_dict[word] = [count]
 		# my_dict
 		# print('"%s" is repeated %d time%s.' % (word, count, "s" if count > 1 else ""))
 	# print(max(count))
