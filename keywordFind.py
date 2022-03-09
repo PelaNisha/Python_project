@@ -24,20 +24,17 @@ def search_for(topic): 							#function to return title and url for subreddit po
 		lst.append(char)
 	return lst	
 
-def subm(topic):							#function to write the 10 comments from each post to a file
-	count = 0							#and convert comments to a large string
+def subm(topic):							#function to write the 10 comments from each post to a file						#and convert comments to a large string
 	comment_lower = ""
 	subred = reddit.subreddit(topic)
-	for submission in subred.hot(limit=2):
-		for comment in submission.comments:
-			if hasattr(comment, "body") and count<10:
+	for submission in subred.hot(limit=6):
+		for comment in submission.comments[:10]:
+			if hasattr(comment, "body"):
 				comment_lo = comment.body.lower()
 				with open("myfile.txt", "a+") as file1:
 					comment_lower = comment_lower + " "+comment_lo
 					file1.write(comment_lower)
-					count= count+1
 		print("*****************")
-		count=0
 
 def keyRead():								#function to convert the string to a list of items
 	li = []
