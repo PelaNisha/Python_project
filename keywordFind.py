@@ -5,7 +5,7 @@ from collections import Counter
 
 id = ""
 secret = ""
-ps= "s"
+ps= ""
 ua = ""
 name = ""
 
@@ -39,7 +39,6 @@ def subm(topic):							#function to write the 10 comments from each post to a fi
 def keyRead():								#function to convert the string to a list of items
 	li = []
 	with open("myfile.txt", "r+") as file1:
-		# print(file1.read())
 		li.append(file1.read())
 	return (str(li))
 
