@@ -9,7 +9,6 @@ def search(URL, a):
     try:
         response= requests.get(url, timeout=timeout)
         data = response.json()
-        # return {'type': 'success', 'data': data}
         return data
 
     except requests.exceptions.RequestException as e:  
