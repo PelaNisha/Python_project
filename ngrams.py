@@ -4,27 +4,34 @@ import nltk
 import praw
 import os
 
-id = "_A9_qXJrlNxXExhn-ZK8RQ"
-secret = "VD0ySjDluZgk74q00tGe_HX-whWZwg"
-ps= "songjoongki"
-ua = "first_app"
-name = "__special"
+id = ""
+secret = ""
+ps= ""
+ua = ""
+name = ""
 
 reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, username= name, password = ps)
-topic = 'withyoualways'
 
 stop_words = set(stopwords.words('english'))
 
-def subm(topic):							#function to write the 10 comments from each post to a file	
+
+stop_words = set(stopwords.words('english'))
+
+def subm(topic):	
+	li = []						#function to write the 10 comments from each post to a file	
 	item = topic+'.txt'						#and convert comments to a large string
 	comment_lower = ""
 	subred = reddit.subreddit(topic)
 	for submission in subred.hot(limit=2):
 		for comment in submission.comments[:10]:
 			if hasattr(comment, "body"):
-				comment_lo = comment.body.lower()
-				comment_lower = comment_lower + " "+comment_lo
-				print("*****")
+				for word in comment.body.split():
+					# print(word)
+					if word not in stop_words:
+						# print(word)
+						word = word.lower()
+						comment_lower = comment_lower + " "+word
+						print("*****")
 		print("*****************")
 	with open(item, "w+") as file1:	
 		file1.write(comment_lower)
