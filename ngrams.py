@@ -14,49 +14,60 @@ reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, use
 
 stop_words = set(stopwords.words('english'))
 
-
-stop_words = set(stopwords.words('english'))
-
-def subm(topic):	
-	li = []						#function to write the 10 comments from each post to a file	
+def subm(topic):					
 	item = topic+'.txt'						#and convert comments to a large string
-	comment_lower = ""
+	comment_lower = []
+	url = []
 	subred = reddit.subreddit(topic)
-	for submission in subred.hot(limit=2):
-		for comment in submission.comments[:10]:
+	for submission in subred.hot(limit=10):
+		for comment in submission.comments:
 			if hasattr(comment, "body"):
 				for word in comment.body.split():
-					# print(word)
-					if word not in stop_words:
-						# print(word)
+					if Find(word):
+						if word not in url:
+							url.append(word)
+							print("##########")
+					elif word not in stop_words:
 						word = word.lower()
-						comment_lower = comment_lower + " "+word
-						print("*****")
-		print("*****************")
+						comment_lower.append(word)
+			
 	with open(item, "w+") as file1:	
-		file1.write(comment_lower)
-	return comment_lower
+		file1.write(str(url))
+		file1.write('*')
+		file1.write(str(comment_lower))
+	return url, comment_lower	
+
+def Find(string):
+	# findall() has been used to match string to url format
+	regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+	url = re.findall(regex,string)      
+	return [x[0] for x in url]	
 
 def keyRead(top):	
 	item= top+'.txt'
 	if os.path.isfile(item):							#function to convert the string to a list of items
 		with open(item, "r+") as file1:
-			content =  file1.read()
-			return content
+			content = file1.read()
+			content_list = content.split("*")
+			file1.close()
+			return content_list[0],content_list[1]
 	else:
 		return subm(top)
 
-def splt1(a):
-	ngrams = list(nltk.ngrams(a.split(' '), n=2))
+def splt1(u, t):
+	ngrams = list(nltk.ngrams(t.split(' '), n=2))
 	ngrams_count = {i : ngrams.count(i) for i in ngrams}
-	return ngrams_count
+	return u, ngrams_count
 
-def sortD(d):								#function to sort dict by value in descending order
+def sortD(e, d):								#function to sort dict by value in descending order
+	print(e)
+	print("\n")
 	sort_orders = sorted(d.items(), key=lambda x: x[1], reverse=True)
 	for i in sort_orders:
 		print(i[0], i[1])
 
 top = input("Enter the subreddit: ")
-x = keyRead(top)
-y = splt1(x)
-sortD(y)
+# subm(top)
+a, b = keyRead(top)
+z, y = splt1(a, b)
+sortD(z, y)
