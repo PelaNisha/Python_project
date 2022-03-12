@@ -66,8 +66,7 @@ def sortD(e, d):								#function to sort dict by value in descending order
 	for i in sort_orders:
 		print(i[0], i[1])
 
-top = input("Enter the subreddit: ")
-# subm(top)
-a, b = keyRead(top)
-z, y = splt1(a, b)
-sortD(z, y)
+top = input("Enter the subreddit: ")  
+a, b = keyRead(top) #returns the url list and comments words in list
+z, y = splt1(a, b)  # return url list and count of words 
+sortD(z, y) #prints url lsit and words count in sorted
