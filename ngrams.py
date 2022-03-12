@@ -19,12 +19,12 @@ reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, use
 
 stop_words = set(stopwords.words('english'))
 
-def subm(topic):					
-	item = topic+'.txt'						#and convert comments to a large string
+def subm(topic):							#writes to the file and aso return the url lsit 				
+	item = topic+'.txt'						
 	comment_lower = []
 	url = []
 	subred = reddit.subreddit(topic)
-	for submission in subred.hot(limit=10):
+	for submission in subred.hot(limit=1):
 		for comment in submission.comments:
 			if hasattr(comment, "body"):
 				for word in comment.body.split():
@@ -40,7 +40,7 @@ def subm(topic):
 		file1.write(str(url))
 		file1.write('*')
 		file1.write(str(comment_lower))
-	return url, comment_lower	
+	return url, str(comment_lower)	
 
 def Find(string):
 	# findall() has been used to match string to url format
