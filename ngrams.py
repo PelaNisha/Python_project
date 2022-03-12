@@ -3,6 +3,11 @@ from nltk.corpus import stopwords
 import nltk
 import praw
 import os
+import json
+from pprint import pprint
+import time
+import re #regular expression
+
 
 id = ""
 secret = ""
