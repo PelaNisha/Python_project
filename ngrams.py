@@ -17,6 +17,7 @@ name = ""
 
 reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, username= name, password = ps)
 
+
 stop_words = set(stopwords.words('english'))
 
 def subm(topic):							#writes to the file and aso return the url lsit 				
@@ -24,23 +25,34 @@ def subm(topic):							#writes to the file and aso return the url lsit
 	comment_lower = []
 	url = []
 	subred = reddit.subreddit(topic)
-	for submission in subred.hot(limit=1):
-		for comment in submission.comments:
+	for submission in subred.hot(limit=5):
+		# print(submission.title)
+		w = submission.url
+		u = urlparse(w)
+		uu = u.hostname
+		if uu not in url:
+			# u = urlparse(w)
+			url.append(uu)
+			print("##########")
+		for word in submission.title.split():
+			if word not in stop_words:
+				word = word.lower()
+				comment_lower.append(word)
+		for comment in submission.comments[:5]:
 			if hasattr(comment, "body"):
 				for word in comment.body.split():
 					if Find(word):
-						if word not in url:
-							url.append(word)
+						w = urlparse(word)
+						ww = w.hostname
+						if ww not in url:
+							# u = urlparse(word)
+							url.append(ww)
 							print("##########")
 					elif word not in stop_words:
 						word = word.lower()
 						comment_lower.append(word)
-			
-	with open(item, "w+") as file1:	
-		file1.write(str(url))
-		file1.write('*')
-		file1.write(str(comment_lower))
-	return url, str(comment_lower)	
+
+	return str(url), str(comment_lower)	
 
 def Find(string):
 	# findall() has been used to match string to url format
@@ -48,30 +60,27 @@ def Find(string):
 	url = re.findall(regex,string)      
 	return [x[0] for x in url]	
 
-def keyRead(top):	
-	item= top+'.txt'
-	if os.path.isfile(item):							#function to convert the string to a list of items
-		with open(item, "r+") as file1:
-			content = file1.read()
-			content_list = content.split("*")
-			file1.close()
-			return content_list[0],content_list[1]
-	else:
-		return subm(top)
-
-def splt1(u, t):
+def splt1( u, t):
 	ngrams = list(nltk.ngrams(t.split(' '), n=2))
 	ngrams_count = {i : ngrams.count(i) for i in ngrams}
 	return u, ngrams_count
 
-def sortD(e, d):								#function to sort dict by value in descending order
-	print(e)
-	print("\n")
+def sortD(c, e, d):	
+	item = c+".txt"							#function to sort dict by value in descending order
+	# print(e)
+	# print("\n")
 	sort_orders = sorted(d.items(), key=lambda x: x[1], reverse=True)
-	for i in sort_orders:
-		print(i[0], i[1])
+	with open(item, "w+") as file1:	
+		file1.write(e)
+		file1.write('\n')
+		for i in sort_orders[:20]:
+			s = str(i[0])+str(i[1])
+			file1.write(s+'\n')
+	
+		# print(i[0], i[1])
+	print("Done")	
 
 top = input("Enter the subreddit: ")  
-a, b = keyRead(top) #returns the url list and comments words in list
+a, b = subm(top) #returns the url list and comments words in list
 z, y = splt1(a, b)  # return url list and count of words 
-sortD(z, y) #prints url lsit and words count in sorted
+sortD(top,z, y) #prints url lsit and words count in sorted
