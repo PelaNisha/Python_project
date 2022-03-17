@@ -22,7 +22,7 @@ reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, use
 stop_words = set(stopwords.words('english'))
 
 def subm(topic):							#writes to the file and aso return the url lsit 				
-	item = topic+'.txt'						
+	item = topic+'.json'						
 	comment_lower = []
 	url = []
 	subred = reddit.subreddit(topic)
@@ -53,7 +53,7 @@ def subm(topic):							#writes to the file and aso return the url lsit
 						word = word.lower()
 						comment_lower.append(word)
 
-	return str(url), str(comment_lower)	
+	splt1(topic, str(url), str(comment_lower))
 
 def Find(string):
 	# findall() has been used to match string to url format
@@ -61,15 +61,25 @@ def Find(string):
 	url = re.findall(regex,string)      
 	return [x[0] for x in url]	
 
-def splt1( u, t):
+def iffile(topic):
+	item= topic+'.json'
+	if os.path.isfile(item):
+		parse(item)
+	else:
+		return subm(topic)   
+
+def splt1(topic, u, t):
 	ngrams = list(nltk.ngrams(t.split(' '), n=2))
 	ngrams_count = {i : ngrams.count(i) for i in ngrams}
-	return u, ngrams_count
+	sortD(topic, u, ngrams_count)
 
 def sortD(c, e, d):	
 	item = c+".json"	
-	mydict = {}						#function to sort dict by value in descending order
+	mydict = {}		
+	urldict = {}
+	urldict['url'] = e				#function to sort dict by value in descending order
 	keylist = []
+	keylist.append(urldict)
 	sort_orders = sorted(d.items(), key=lambda x: x[1], reverse=True)
 	for i in sort_orders[:20]:
 		mydict['words'] = i[0]
@@ -78,9 +88,17 @@ def sortD(c, e, d):
 		mydict = {}
 	with open(item, "w+") as f:
 		json.dump(keylist, f, indent = 2)
-	print("done")	
+	return "done"
+
+def parse(top):
+	with open('cutecats.json', 'r') as f:
+ 		data = json.load(f)
+	print(data)
+# Output: {'name': 'Bob', 'languages': ['English', 'French']}
+	
+# Output: {'name': 'Bob', 'languages': ['English', 'French']}
 
 top = input("Enter the subreddit: ")  
-a, b = subm(top) #returns the url list and comments words in list
-z, y = splt1(a, b)  # return url list and count of words 
-sortD(top,z, y) #prints url lsit and words count in sorted
+result = iffile(top) #returns the url list and comments words in list
+ #prints url lsit and words count in sorted
+print(result)
