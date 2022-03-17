@@ -18,10 +18,9 @@ name = ""
 
 reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, username= name, password = ps)
 
-
 stop_words = set(stopwords.words('english'))
 
-def subm(topic):							#writes to the file and aso return the url lsit 				
+def subm(topic):											
 	item = topic+'.json'						
 	comment_lower = []
 	url = []
@@ -32,7 +31,6 @@ def subm(topic):							#writes to the file and aso return the url lsit
 		u = urlparse(w)
 		uu = u.hostname
 		if uu not in url:
-			# u = urlparse(w)
 			url.append(uu)
 			print("##########")
 		for word in submission.title.split():
@@ -46,7 +44,6 @@ def subm(topic):							#writes to the file and aso return the url lsit
 						w = urlparse(word)
 						ww = w.hostname
 						if ww not in url:
-							# u = urlparse(word)
 							url.append(ww)
 							print("##########")
 					elif word not in stop_words:
@@ -64,7 +61,7 @@ def Find(string):
 def iffile(topic):
 	item= topic+'.json'
 	if os.path.isfile(item):
-		parse(item)
+		return parse(item)
 	else:
 		return subm(topic)   
 
@@ -77,7 +74,7 @@ def sortD(c, e, d):
 	item = c+".json"	
 	mydict = {}		
 	urldict = {}
-	urldict['url'] = e				#function to sort dict by value in descending order
+	urldict['url'] = e			
 	keylist = []
 	keylist.append(urldict)
 	sort_orders = sorted(d.items(), key=lambda x: x[1], reverse=True)
@@ -88,17 +85,14 @@ def sortD(c, e, d):
 		mydict = {}
 	with open(item, "w+") as f:
 		json.dump(keylist, f, indent = 2)
-	return "done"
+	return keylist
 
 def parse(top):
-	with open('cutecats.json', 'r') as f:
- 		data = json.load(f)
-	print(data)
-# Output: {'name': 'Bob', 'languages': ['English', 'French']}
-	
-# Output: {'name': 'Bob', 'languages': ['English', 'French']}
+	with open(top, 'r') as f:
+		data = json.load(f)
+	return data
+
 
 top = input("Enter the subreddit: ")  
-result = iffile(top) #returns the url list and comments words in list
- #prints url lsit and words count in sorted
+result = iffile(top) 
 print(result)
