@@ -8,6 +8,7 @@ from pprint import pprint
 import time
 import re #regular expression
 
+from urllib.parse import urlparse
 
 id = ""
 secret = ""
@@ -66,19 +67,18 @@ def splt1( u, t):
 	return u, ngrams_count
 
 def sortD(c, e, d):	
-	item = c+".txt"							#function to sort dict by value in descending order
-	# print(e)
-	# print("\n")
+	item = c+".json"	
+	mydict = {}						#function to sort dict by value in descending order
+	keylist = []
 	sort_orders = sorted(d.items(), key=lambda x: x[1], reverse=True)
-	with open(item, "w+") as file1:	
-		file1.write(e)
-		file1.write('\n')
-		for i in sort_orders[:20]:
-			s = str(i[0])+str(i[1])
-			file1.write(s+'\n')
-	
-		# print(i[0], i[1])
-	print("Done")	
+	for i in sort_orders[:20]:
+		mydict['words'] = i[0]
+		mydict['count'] = i[1]
+		keylist.append(mydict)
+		mydict = {}
+	with open(item, "w+") as f:
+		json.dump(keylist, f, indent = 2)
+	print("done")	
 
 top = input("Enter the subreddit: ")  
 a, b = subm(top) #returns the url list and comments words in list
