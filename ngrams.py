@@ -18,7 +18,7 @@ reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, use
 
 stop_words = set(stopwords.words('english'))
 
-def collectUrlComt(topic):							 										
+def collectUrlCmt(topic):							 										
 	comment_lower = ""
 	url = []
 	subred = reddit.subreddit(topic)
@@ -58,7 +58,7 @@ def ifFile(topic):
 	if os.path.isfile(item):
 		return parse(item)
 	else:
-		return collectUrlComt(topic)   
+		return collectUrlCmt(topic)   
 
 def countCmt(topic, u, t):
 	ngrams = list(nltk.ngrams(t.split(), n=2))
