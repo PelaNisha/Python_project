@@ -15,10 +15,9 @@ name = ""
 
 reddit = praw.Reddit(client_id = id, client_secret = secret, user_agent= ua, username= name, password = ps)
 
-
 stop_words = set(stopwords.words('english'))
 
-def collectUrlCmt(topic):							 										
+def collectUrlComt(topic):							
 	comment_lower = ""
 	url = []
 	subred = reddit.subreddit(topic)
@@ -46,7 +45,7 @@ def collectUrlCmt(topic):
 						word = word.lower()
 						comment_lower = comment_lower+" "+word
 
-	countCmt(topic, url, comment_lower)
+	return countCmt(topic, url, comment_lower)
 
 def isUrl(string):
 	regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
@@ -58,12 +57,12 @@ def ifFile(topic):
 	if os.path.isfile(item):
 		return parse(item)
 	else:
-		return collectUrlCmt(topic)   
+		return collectUrlComt(topic)   
 
 def countCmt(topic, u, t):
 	ngrams = list(nltk.ngrams(t.split(), n=2))
 	ngrams_count = {i : ngrams.count(i) for i in ngrams}
-	sortCmtPhrse(topic, u, ngrams_count)
+	return sortCmtPhrse(topic, u, ngrams_count)
 
 def sortCmtPhrse(c, e, d):	
 	item = c+".json"	
@@ -80,12 +79,28 @@ def sortCmtPhrse(c, e, d):
 		worddict = {}
 	with open(item, "w+") as f:
 		json.dump(finalList, f, indent = 2)
-	return finalList
+	return "saved in file"
 
 def parse(top):
 	with open(top, 'r') as f:
 		data = json.load(f)
-	return data
+	opt = int(input("File Present!\nEnter 1 for url, 2 for words and 3 to exit\n"))	
+	if opt == 1:
+		return retUrl(data)
+	if opt == 2:
+		return retWord(data)	
+	if opt == 3:
+		return "Exited!"	
+	else:
+		return "Invalid input!"
+
+def retUrl(data):
+	return data[0]['url']
+
+def retWord(data):
+	for i in range(1, len(data)):
+		print(data[i])
+	return "End of file"	
 
 topic = input("Enter the subreddit: ")  
 result = ifFile(topic) 
