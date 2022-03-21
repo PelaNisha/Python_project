@@ -82,19 +82,12 @@ def sortCmtPhrse(c, e, d):
 	return "saved in file"
 
 def parse(top):
-	opt = int(input("File Present!\nEnter 1 for url, 2 for words and 3 to exit\n"))	
-	if opt == 3:
-		return "Exited!"	
-	else:
-		with open(top, 'r') as f:
-			data = json.load(f)
-		if opt == 1:
-			return retUrl(data)
-		if opt == 2:
-			return retWord(data)	
-		else:
-			return "Invalid input!"
-
+	print("File Present!")
+	with open(top, 'r') as f:
+		data = json.load(f)
+	#Call retUrl to print the urls and retWord to print words	
+	return 
+	
 def retUrl(data):
 	return data[0]['url']
 
