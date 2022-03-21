@@ -97,5 +97,8 @@ def retWord(data):
 	return "End of file"	
 
 topic = input("Enter the subreddit: ")  
-result = ifFile(topic) 
-print(result)
+# result = ifFile(topic) 
+# a = retUrl(ifFile(topic))
+# print(a)
+a = retWord(ifFile(topic))
+print(a)
