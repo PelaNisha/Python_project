@@ -126,11 +126,3 @@ def return_words(data):
 	for i in range(1, len(data)):
 		print(data[i])
 	return "End of file"	
-
-
-# Input the subreddit from the user
-subreddit = input("Enter the subreddit: ")  
-# a = return_urls(ifFile(topic))
-# print(a)
-output = return_words(if_file(subreddit))
-print(output)
