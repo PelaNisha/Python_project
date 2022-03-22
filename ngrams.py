@@ -14,14 +14,14 @@ import re
 from urllib.parse import urlparse
 
 # Bot id and other credentials
-id = ""
+id_ = ""
 secret = ""
 ps= ""
 ua = ""
 name = ""
 
 
-reddit = praw.Reddit(client_id = id,client_secret = secret,
+reddit = praw.Reddit(client_id = id_,client_secret = secret,
 		     user_agent= ua,username= name, password = ps)
 
 
@@ -73,7 +73,7 @@ def is_url(string):
 def if_file(topic):
 	item= topic+'.json'
 	if os.path.isfile(item):
-		return parse(item)
+		return parse_(item)
 	else:
 		return collect_url_Comment(topic)   
 	
@@ -109,7 +109,7 @@ def sort_keywords_count(topic, url_list, keyword_count):
 
 
 # Parse the file for subreddit
-def parse(top):
+def parse_(top):
 	print("File Present!")
 	with open(top, 'r') as f:
 		data = json.load(f)
