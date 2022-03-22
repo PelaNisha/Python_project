@@ -2,7 +2,7 @@
 reddit bot and python to extract the keywords and keyword prase
 """
 
-# modules used
+# Modules used
 from collections import Counter
 from distutils import filelist
 from nltk.corpus import stopwords 	
@@ -13,7 +13,7 @@ import json
 import re 
 from urllib.parse import urlparse
 
-# bot id and other credentials
+# Bot id and other credentials
 id = ""
 secret = ""
 ps= ""
@@ -27,7 +27,7 @@ reddit = praw.Reddit(client_id = id,client_secret = secret,
 
 stop_words = set(stopwords.words('english'))
 
-# function that collects url and comments from subreddit into list and string resp.
+# Function that collects url and comments from subreddit into list and string resp.
 def collect_url_Comment(topic):							
 	comment_lower = ""
 	url = []
@@ -59,7 +59,7 @@ def collect_url_Comment(topic):
 	return count_keywords(topic, url, comment_lower)
 
 
-# to check if a string is a url
+# Check if a string is a url
 def is_url(string):
 	regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+\
 	[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+\
@@ -69,7 +69,7 @@ def is_url(string):
 	return [x[0] for x in url]
 
 
-# to check is a file is already present for respective subreddit
+# Check if a file is already present for respective subreddit
 def if_file(topic):
 	item= topic+'.json'
 	if os.path.isfile(item):
@@ -78,7 +78,7 @@ def if_file(topic):
 		return collect_url_Comment(topic)   
 	
 
-# to count the number of times a phrase was repeated
+# Count the number of times a phrase was repeated
 def count_keywords(topic, url_list, final_string):
 	ngrams = list(nltk.ngrams(final_string.split(), n=2))
 	ngrams_count = {i : ngrams.count(i) for i in ngrams}
@@ -86,11 +86,11 @@ def count_keywords(topic, url_list, final_string):
 	return sort_keywords_count(topic, url_list, ngrams_count)
 
 
-# sort the keywords phrase in descending order
+# Sort the keywords phrase in descending order
 def sort_keywords_count(topic, url_list, keyword_count):	
 	item = topic+".json"	
 	words_dict = {}		
-	url_dict = {}			# to combine the urls from post and comments into a dict
+	url_dict = {}			# To combine the urls from post and comments into a dict
 	url_dict['url'] = url_list				
 	final_list = []
 	final_list.append(url_dict)
@@ -108,7 +108,7 @@ def sort_keywords_count(topic, url_list, keyword_count):
 	return final_list
 
 
-# parse the file for subreddit
+# Parse the file for subreddit
 def parse(top):
 	print("File Present!")
 	with open(top, 'r') as f:
@@ -116,19 +116,19 @@ def parse(top):
 	return data
 
 	
-# call this function to return the urls from the file
+# Call this function to return the urls from the file
 def return_urls(data):
 	return data[0]['url']
 
 
-# call this function to return the keyword phrases from the file
+# Call this function to return the keyword phrases from the file
 def return_words(data):
 	for i in range(1, len(data)):
 		print(data[i])
 	return "End of file"	
 
 
-# input the subreddit from the user
+# Input the subreddit from the user
 subreddit = input("Enter the subreddit: ")  
 # a = return_urls(ifFile(topic))
 # print(a)
