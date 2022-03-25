@@ -28,14 +28,12 @@ reddit = praw.Reddit(client_id = id,client_secret = secret,
 
 
  
- 
 # function that collects url and comments from subreddit into list and string resp.
 def commenters_names(topic):
 	authors_dict = {}		
 	final_list = []
 	original_comment_author = []
 	replied_comment_author = []
-
 
 	subred = reddit.subreddit(topic)
 	for submission in subred.hot(limit = 3):
@@ -45,15 +43,16 @@ def commenters_names(topic):
 				comment_author = comment.author
 				# print(comment_author)
 				if comment_author not in original_comment_author:
-					authors_dict['author'] = str(comment_author)
+					authors_dict['comment author'] = str(comment_author)
 					original_comment_author.append(str(comment_author))
 					final_list.append(authors_dict)
-					authors_dict = {}
+					
 				for reply in comment.replies:
 					# print(reply.author)
-					authors_dict['repliers'] = str(reply.author)
+					
 					replied_comment_author.append(str(reply.author))
-					final_list.append(authors_dict)
+				authors_dict['repliers'] = replied_comment_author
+				replied_comment_author =[]
 				authors_dict = {}
 
 	with open(topic+".json", "w+") as f:
