@@ -28,41 +28,36 @@ reddit = praw.Reddit(client_id = id,client_secret = secret,
 
 
  
+ 
 # function that collects url and comments from subreddit into list and string resp.
 def commenters_names(topic):
-	comment_replies = []
-	original_comment = []
-	original_comment = []
-
+	authors_dict = {}		
+	final_list = []
 	original_comment_author = []
 	replied_comment_author = []
 
 
 	subred = reddit.subreddit(topic)
 	for submission in subred.hot(limit = 3):
-		print("Title: ", submission.title)
 		print("url: ", submission.url)
-		print("Author: ", submission.author)
-		# print("total comments: ", submission.num_comments)
-		# print("Num of subs: ", submission.subreddit_subscribers)
-		# print("Score: ", submission.score)
-		for comment in submission.comments[:5]:
+		for comment in submission.comments[:10]:
 			if hasattr(comment, "body"):
-				print(comment.author)
-				# Check before replying to another comment
-				if comment.id not in original_comment:
-					original_comment.append(comment.id)
-					original_comment_author.append(comment.author)
-				else:
-					for reply in comment.replies:
-						comment.reply_sort = "new"
-						comment.refresh()
-						replies = comment.replies
-					replied_comment_author.append(replies)
-					
-		print("**************")
-		print(original_comment_author)
-		print("---------------")
-		print(replied_comment_author)
+				comment_author = comment.author
+				# print(comment_author)
+				if comment_author not in original_comment_author:
+					authors_dict['author'] = str(comment_author)
+					original_comment_author.append(str(comment_author))
+					final_list.append(authors_dict)
+					authors_dict = {}
+				for reply in comment.replies:
+					# print(reply.author)
+					authors_dict['repliers'] = str(reply.author)
+					replied_comment_author.append(str(reply.author))
+					final_list.append(authors_dict)
+				authors_dict = {}
+
+	with open(topic+".json", "w+") as f:
+		json.dump(final_list, f, indent = 2)
+
 topic = input("Enter the topic: ")
 commenters_names(topic)
