@@ -3,17 +3,12 @@ about who replied to whom.
 """
 
 # modules used
-import validators
-from collections import Counter
-from distutils import filelist
-from nltk.corpus import stopwords 	
-import nltk
-import praw
+from test import *
+import praw	
 import os
 import json
-import re # regular expression
-from urllib.parse import urlparse 	
-
+from pprint import pprint
+	
 
 # bot id and other credentials
 id = ""
@@ -56,12 +51,22 @@ def commenters_names(topic):
 				authors_dict = {}
 
 	li = sorted(final_list, key = lambda i: i['repliers_count'], reverse=True)
+
 	return second_step(li, topic)
-	
+
 
 def second_step(final_list, top):
 	with open(top+".json", "w+") as f:
 		json.dump(final_list, f, indent = 2)
 
+# to check is a file is already present for respective subreddit
+def if_file(topic):
+	item= topic+'.json'
+	if os.path.isfile(item):
+		data =  parse_(item)
+		pprint(data)
+	else:
+		return commenters_names(topic)  
+
 topic = input("Enter the topic: ")
-commenters_names(topic)
+if_file(topic)
