@@ -52,6 +52,7 @@ def commenters_names(topic):
 					
 					replied_comment_author.append(str(reply.author))
 				authors_dict['repliers'] = replied_comment_author
+				authors_dict['repliers_count'] = len(replied_comment_author)
 				replied_comment_author =[]
 				authors_dict = {}
 
