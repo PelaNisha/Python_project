@@ -11,14 +11,14 @@ from pprint import pprint
 	
 
 # bot id and other credentials
-id = ""
+id_ = ""
 secret = ""
 ps= ""
 ua = ""
 name = ""
 
 
-reddit = praw.Reddit(client_id = id,client_secret = secret,
+reddit = praw.Reddit(client_id = id_,client_secret = secret,
 					user_agent= ua,username= name, password = ps)
 
   
