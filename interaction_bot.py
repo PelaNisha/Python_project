@@ -29,16 +29,14 @@ def commenters_names(topic):
 	for submission in subred.hot(limit = 3):
 		for comment in submission.comments[:10]:
 			if hasattr(comment, "body"):
-				original_comment_author = []
 				replied_comment_author = []
 				authors_dict = {}	
 				comment_author = comment.author.name
 				comment_body = comment.body
+				
+				authors_dict['comment author'] = comment_author
+				authors_dict['comment body'] = comment_body
 
-				if comment_author not in original_comment_author:
-					authors_dict['comment author'] = comment_author
-					authors_dict['comment body'] = comment_body
-					original_comment_author.append(comment_author)
 										
 				for reply in comment.replies:
 					replied_comment_author.append(reply.author.name)
