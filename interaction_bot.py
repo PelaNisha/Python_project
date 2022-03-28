@@ -3,7 +3,7 @@ about who replied to whom, the comment and its keywords
 """
 
 
-# modules used
+# Modules used
 from test import * # file as a package to import functions
 import praw	
 import os
@@ -11,7 +11,7 @@ import json
 from pprint import pprint
 	
 	
-# bot id and other credentials
+# Bot id and other credentials
 id_ = ""
 secret = ""
 ps= ""
@@ -26,7 +26,7 @@ reddit = praw.Reddit(client_id = id_,client_secret = secret,
 stop_words = set(stopwords.words('english'))
 
 
-# make a list of dicts for comment author, repliers, repliers count and comment body
+# Make a list of dicts for comment author, repliers, repliers count and comment body
 def commenters_info_and_comment(topic):
 	final_list = []
 	subred = reddit.subreddit(topic)
@@ -51,7 +51,7 @@ def commenters_info_and_comment(topic):
 	return dump_json(li, topic)
 
 
-# dump the json response and also print the keywords for comments
+# Dump the json response and also print the keywords for comments
 def dump_json(final_list, top):
 	with open(top+".json", "w+") as f:
 		json.dump(final_list, f, indent = 2)
