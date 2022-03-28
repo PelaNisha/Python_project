@@ -22,6 +22,9 @@ reddit = praw.Reddit(client_id = id_,client_secret = secret,
 					user_agent= ua,username= name, password = ps)
 
  
+stop_words = set(stopwords.words('english'))
+
+
 # function that collects url and comments from subreddit into list and string resp.
 def commenters_names(topic):
 	final_list = []
@@ -33,11 +36,9 @@ def commenters_names(topic):
 				authors_dict = {}	
 				comment_author = comment.author.name
 				comment_body = comment.body
-				
 				authors_dict['comment author'] = comment_author
 				authors_dict['comment body'] = comment_body
-
-										
+								
 				for reply in comment.replies:
 					replied_comment_author.append(reply.author.name)
 
@@ -60,30 +61,37 @@ def if_file(topic):
 	item= topic+'.json'
 	if os.path.isfile(item):
 		data =  parse_(item)
-# 		url_ = []
-# 		str_ = "" # concat the string to make a large a comment 
-# 		for i in range(0,len(data)):
-# 			for word in data[i]['comment body'].split():
-# 				if is_url(word):
-# 					url_in_comment = urlparse(word)
-# 					url_hostname = url_in_comment.hostname
-# 					if url_hostname not in url_:
-# 						url_.append(url_hostname)
-# 				if word not in stop_words:
-# 					word = word.lower()
-# 					str_.append(word)
-# 		x =  count_keywords(topic, url_, str_)
-# 		pprint(x)
+		str_ = "" # concat the string to make a large a comment 
+		for i in range(0,len(data)):
+			for word in data[i]['comment body'].split():
+				if word not in stop_words:
+					word = word.lower()
+					str_ = str_+" "+ word
+		x =  count_keywords(str_)
+		pprint(x)
 	else:
 		return commenters_names(topic)  
 
 
 # Count the number of times a phrase was repeated
-def count_keywords(topic, url_list, final_string):
+def count_keywords(final_string):
 	ngrams = list(nltk.ngrams(final_string.split(), n=2))
 	ngrams_count = {i : ngrams.count(i) for i in ngrams}
 
-	return sort_keywords_count(topic, url_list, ngrams_count)
+	return sort_keywords_count(ngrams_count)
+
+# Sort the keywords phrase in descending order
+def sort_keywords_count(keyword_count):		
+	words_dict = {}					
+	final_list = []
+	sort_orders = sorted(keyword_count.items(), key=lambda x: x[1], reverse=True)
+
+	for i in sort_orders[:20]:
+		words_dict['words'] = i[0]
+		words_dict['count'] = i[1]
+		final_list.append(words_dict)
+		words_dict = {}
+	return final_list	
 
 
 topic = input("Enter the topic: ")
