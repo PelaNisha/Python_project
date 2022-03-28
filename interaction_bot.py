@@ -2,6 +2,7 @@
 about who replied to whom, the comment and its keywords
 """
 
+
 # modules used
 from test import * # file as a package to import functions
 import praw	
@@ -9,7 +10,7 @@ import os
 import json
 from pprint import pprint
 	
-
+	
 # bot id and other credentials
 id_ = ""
 secret = ""
@@ -19,7 +20,7 @@ name = ""
 
 
 reddit = praw.Reddit(client_id = id_,client_secret = secret,
-					user_agent= ua,username= name, password = ps)
+		     user_agent= ua,username= name, password = ps)
 
  
 stop_words = set(stopwords.words('english'))
@@ -32,15 +33,12 @@ def commenters_info_and_comment(topic):
 	for submission in subred.hot(limit = 3):
 		for comment in submission.comments[:10]:
 			if hasattr(comment, "body"):
-				original_comment_author = []
 				replied_comment_author = []
 				authors_dict = {}	
-				comment_author = comment.author
+				comment_author = comment.author.name
 				comment_body = comment.body
-				if comment_author not in original_comment_author:
-					authors_dict['comment author'] = str(comment_author)
-					authors_dict['comment body'] = str(comment_body)
-					original_comment_author.append(str(comment_author))
+				authors_dict['comment author'] = comment_author
+				authors_dict['comment body'] = comment_body
 
 				for reply in comment.replies:
 					replied_comment_author.append(str(reply.author))
@@ -48,7 +46,7 @@ def commenters_info_and_comment(topic):
 				authors_dict['repliers_count'] = len(replied_comment_author)
 				final_list.append(authors_dict)
 				
-	li = sorted(final_list, key = lambda i: i['repliers_count'], reverse=True)
+	li = sorted(final_list, key = lambda i: i['repliers_count'], reverse=True) # sort the dict acc to repliers_count
 
 	return dump_json(li, topic)
 
