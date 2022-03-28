@@ -27,30 +27,31 @@ stop_words = set(stopwords.words('english'))
 
 # make a list of dicts for comment author, repliers, repliers count and comment body
 def commenters_info_and_comment(topic):
-	authors_dict = {}		
 	final_list = []
-	original_comment_author = []
-	replied_comment_author = []
-
 	subred = reddit.subreddit(topic)
 	for submission in subred.hot(limit = 3):
 		for comment in submission.comments[:10]:
 			if hasattr(comment, "body"):
+				original_comment_author = []
+				replied_comment_author = []
+				authors_dict = {}	
 				comment_author = comment.author
 				comment_body = comment.body
 				if comment_author not in original_comment_author:
+					
 					authors_dict['comment author'] = str(comment_author)
 					authors_dict['comment body'] = str(comment_body)
 					original_comment_author.append(str(comment_author))
-					final_list.append(authors_dict)
+					
 					
 				for reply in comment.replies:
+					
 					replied_comment_author.append(str(reply.author))
 
 				authors_dict['repliers'] = replied_comment_author
 				authors_dict['repliers_count'] = len(replied_comment_author)
-				replied_comment_author =[]
-				authors_dict = {}
+				final_list.append(authors_dict)
+				
 
 	li = sorted(final_list, key = lambda i: i['repliers_count'], reverse=True)
 
