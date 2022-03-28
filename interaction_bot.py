@@ -22,11 +22,8 @@ reddit = praw.Reddit(client_id = id_,client_secret = secret,
 					user_agent= ua,username= name, password = ps)
 
  
-  
-stop_words = set(stopwords.words('english'))
-
-# make a list of dicts for comment author, repliers, repliers count and comment body
-def commenters_info_and_comment(topic):
+# function that collects url and comments from subreddit into list and string resp.
+def commenters_names(topic):
 	final_list = []
 	subred = reddit.subreddit(topic)
 	for submission in subred.hot(limit = 3):
@@ -35,58 +32,53 @@ def commenters_info_and_comment(topic):
 				original_comment_author = []
 				replied_comment_author = []
 				authors_dict = {}	
-				comment_author = comment.author
+				comment_author = comment.author.name
 				comment_body = comment.body
+
 				if comment_author not in original_comment_author:
-					
-					authors_dict['comment author'] = str(comment_author)
-					authors_dict['comment body'] = str(comment_body)
-					original_comment_author.append(str(comment_author))
-					
-					
+					authors_dict['comment author'] = comment_author
+					authors_dict['comment body'] = comment_body
+					original_comment_author.append(comment_author)
+										
 				for reply in comment.replies:
-					
-					replied_comment_author.append(str(reply.author))
+					replied_comment_author.append(reply.author.name)
 
 				authors_dict['repliers'] = replied_comment_author
 				authors_dict['repliers_count'] = len(replied_comment_author)
 				final_list.append(authors_dict)
-				
 
 	li = sorted(final_list, key = lambda i: i['repliers_count'], reverse=True)
 
 	return second_step(li, topic)
 
 
-# dump the json response and also print the keywords for comments
 def second_step(final_list, top):
 	with open(top+".json", "w+") as f:
 		json.dump(final_list, f, indent = 2)
-	url = []
-	str = "" # concat the string to make a large a comment 
-	for i in range(0,len(final_list)):
-		for word in final_list[i]['comment body'].split():
-			if is_url(word):
-				url_in_comment = urlparse(word)
-				url_hostname = url_in_comment.hostname
-				if url_hostname not in url:
-					url.append(url_hostname)
-			if word not in stop_words:
-				word = word.lower()
-				str = str+" "+word
-	# print(url)
-	x =  count_keywords(top, url, str)
-	pprint(x)
-
+	
 
 # to check is a file is already present for respective subreddit
 def if_file(topic):
 	item= topic+'.json'
 	if os.path.isfile(item):
 		data =  parse_(item)
-		pprint(data)
+# 		url_ = []
+# 		str_ = "" # concat the string to make a large a comment 
+# 		for i in range(0,len(data)):
+# 			for word in data[i]['comment body'].split():
+# 				if is_url(word):
+# 					url_in_comment = urlparse(word)
+# 					url_hostname = url_in_comment.hostname
+# 					if url_hostname not in url_:
+# 						url_.append(url_hostname)
+# 				if word not in stop_words:
+# 					word = word.lower()
+# 					str_.append(word)
+# 		x =  count_keywords(topic, url_, str_)
+# 		pprint(x)
 	else:
 		return commenters_names(topic)  
+
 
 # Count the number of times a phrase was repeated
 def count_keywords(topic, url_list, final_string):
