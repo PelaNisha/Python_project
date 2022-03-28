@@ -62,7 +62,6 @@ def dump_json(final_list, top):
 # Scape the data is file is present
 def if_file(topic):
 	item= topic+'.json'
-	
 	if os.path.isfile(item):
 		data =  parse_(item)
 		str_ = "" # To concat the string  
@@ -72,7 +71,9 @@ def if_file(topic):
 					word = word.lower()
 					str_ = str_+" "+ word
 		x =  count_keywords(str_)
-		pprint(x)
+		with open(topic+"C"+".json", "w+") as f:
+			json.dump(x, f, indent = 2)
+		print("Word Count Done Successfully!!")
 	else:
 		return commenters_info_and_comment(topic) 
 
