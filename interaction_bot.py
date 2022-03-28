@@ -1,9 +1,9 @@
 """Program to scrape the comments and obtain the user interaction on a comment
-about who replied to whom.
+about who replied to whom, the comment and its keyword
 """
 
 # modules used
-from test import *
+from test import * # file as a package to impoet functions
 import praw	
 import os
 import json
@@ -25,9 +25,8 @@ reddit = praw.Reddit(client_id = id_,client_secret = secret,
   
 stop_words = set(stopwords.words('english'))
 
-
-# function that collects url and comments from subreddit into list and string resp.
-def commenters_names(topic):
+# make a list of dicts for comment author, repliers, repliers count and comment body
+def commenters_info_and_comment(topic):
 	authors_dict = {}		
 	final_list = []
 	original_comment_author = []
@@ -58,6 +57,7 @@ def commenters_names(topic):
 	return second_step(li, topic)
 
 
+# dump the json response and also print the keywords for comments
 def second_step(final_list, top):
 	with open(top+".json", "w+") as f:
 		json.dump(final_list, f, indent = 2)
