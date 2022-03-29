@@ -69,18 +69,19 @@ def if_file(topic):
 			print("From saved C file")		
 		else:
 			data =  parse_(item) # parse the subreddit file
-			str_ = "" # To concat the string  
+			words  =[] # list to store words 
 			for i in range(0,len(data)):
 				for word in data[i]['comment body'].split():
 					if word not in stop_words:
 						word = word.lower()
-						str_ = str_+" "+ word
-			x =  count_keywords(str_)
+						words.append(word)
+			x =  count_keywords(words)
 			with open(topic+"C"+".json", "w+") as f: # create a new json file for the wordcount
 				json.dump(x, f, indent = 2)
 			print("Word Count Done Successfully!!")
 	else:
 		return commenters_info_and_comment(topic) 
+
 
 	
 # Count the number of times a phrase was repeated
