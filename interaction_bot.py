@@ -19,8 +19,8 @@ ua = ""
 name = ""
 
 
-reddit = praw.Reddit(client_id = id_,client_secret = secret,
-		     user_agent= ua,username= name, password = ps)
+reddit = praw.Reddit(client_id = id_, client_secret = secret,
+		     user_agent= ua, username= name, password = ps)
 
  
 stop_words = set(stopwords.words('english'))
@@ -61,23 +61,28 @@ def dump_json(final_list, top):
 # To check is a file is already present for respective subreddit and 
 # Scape the data is file is present
 def if_file(topic):
-	item= topic+'.json'
-	if os.path.isfile(item):
-		data =  parse_(item)
-		str_ = "" # To concat the string  
-		for i in range(0,len(data)):
-			for word in data[i]['comment body'].split():
-				if word not in stop_words:
-					word = word.lower()
-					str_ = str_+" "+ word
-		x =  count_keywords(str_)
-		with open(topic+"C"+".json", "w+") as f:
-			json.dump(x, f, indent = 2)
-		print("Word Count Done Successfully!!")
+	item = topic+'.json' # Subreddit json file naming format
+	if os.path.isfile(item): 
+		item_C = topic+"C"+".json" # Wordcount file naming format
+		if os.path.isfile(item_C): # If wordcount file is already present then parse from the wordcount file
+			parse_(item_C)	
+			print("From saved C file")		
+		else:
+			data =  parse_(item) # parse the subreddit file
+			str_ = "" # To concat the string  
+			for i in range(0,len(data)):
+				for word in data[i]['comment body'].split():
+					if word not in stop_words:
+						word = word.lower()
+						str_ = str_+" "+ word
+			x =  count_keywords(str_)
+			with open(topic+"C"+".json", "w+") as f: # create a new json file for the wordcount
+				json.dump(x, f, indent = 2)
+			print("Word Count Done Successfully!!")
 	else:
 		return commenters_info_and_comment(topic) 
 
-
+	
 # Count the number of times a phrase was repeated
 def count_keywords(final_string):
 	ngrams = list(nltk.ngrams(final_string.split(), n=2))
