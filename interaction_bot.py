@@ -77,22 +77,20 @@ def scrape_data(topic):
 
 
 # function to scrape the respective file and analyze the comments
-def analyze_data(topic): # analyze comments and posts
+
+# function to scrape the respective file and analyze the comments
+def analyze_data(topic): # analyze comments
 	item = topic+'.json'
 	data = []
 	if not os.path.isfile(item): 
 		data =scrape_data(topic)
 	else:
 		data= parse_(item)		
-	sentence = ''
 	ws =[]
-	for i in range(0,len(data)):
-		for j in range(0, len(data[i]['comments'])):
-			for word in data[i]['comments'][j]:
-				sentence = sentence+word
-	for w in sentence.split():
-		if w not in stop_words:
-			ws.append(w)
+	for post in data:
+		for sentence in post['comments']:
+			for word in sentence.split():
+				ws.append(word)	
 	x =  count_keywords(ws)
 	return x
 
