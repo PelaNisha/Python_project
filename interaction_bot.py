@@ -52,33 +52,40 @@ def commenters_info_and_comment(topic):
 
 
 # function to scrape the post and comments and save them into the file
-def first_func(topic):
-	final_list = []
-	submission_post = []
-	sub_reddit = reddit.subreddit(topic)
-	for submission in sub_reddit.hot(limit=3):
-		word_dict = {}
-		submission_post = submission.title
-		word_dict['post'] = submission_post		
-		comment_body = []
-		for comment in submission.comments[:5]:	
-			if hasattr(comment, "body"):
-				comment_body.append(comment.body)
-		word_dict['comments'] = comment_body
-		final_list.append(word_dict)
+def scrape_data(topic):
+	item = topic+ '.json'
+	if os.path.isfile(item): 
+		return parse_(item)
+	else:	
+		final_list = []		
+		submission_post = []
+		sub_reddit = reddit.subreddit(topic)
+		for submission in sub_reddit.hot(limit=3):
+			word_dict = {}
+			submission_post = submission.title
+			word_dict['post'] = submission_post		
+			comment_body = []
+			for comment in submission.comments[:5]:	
+				if hasattr(comment, "body"):
+					comment_body.append(comment.body)
+			word_dict['comments'] = comment_body
+			final_list.append(word_dict)
 
-	with open(topic+".json", "w+") as f:
-		json.dump(final_list, f, indent = 2)
+		with open(topic+".json", "w+") as f:
+			json.dump(final_list, f, indent = 2)
+		return final_list		
 
 
 # function to scrape the respective file and analyze the comments
-def second_func(topic): # analyze comments
+def analyze_data(topic): # analyze comments and posts
 	item = topic+'.json'
+	data = []
 	if not os.path.isfile(item): 
-		first_func(topic)
+		data =scrape_data(topic)
+	else:
+		data= parse_(item)		
 	sentence = ''
 	ws =[]
-	data =  parse_(item) # parse the subreddit file
 	for i in range(0,len(data)):
 		for j in range(0, len(data[i]['comments'])):
 			for word in data[i]['comments'][j]:
