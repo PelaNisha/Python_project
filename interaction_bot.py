@@ -3,7 +3,7 @@ about who replied to whom, the comment and its keywords
 """
 
 
-# Modules used
+# modules used
 from test import * # file as a package to import functions
 import praw	
 import os
@@ -11,7 +11,7 @@ import json
 from pprint import pprint
 	
 	
-# Bot id and other credentials
+# bot id and other credentials
 id_ = ""
 secret = ""
 ps= ""
@@ -22,7 +22,7 @@ name = ""
 reddit = praw.Reddit(client_id = id_, client_secret = secret,
 		     user_agent= ua, username= name, password = ps)
 
- 
+
 stop_words = set(stopwords.words('english'))
 
 
@@ -49,6 +49,45 @@ def commenters_info_and_comment(topic):
 	li = sorted(final_list, key = lambda i: i['repliers_count'], reverse=True) # sort the dict acc to repliers_count
 
 	return dump_json(li, topic)
+
+
+# function to scrape the post and comments and save them into the file
+def first_func(topic):
+	final_list = []
+	submission_post = []
+	sub_reddit = reddit.subreddit(topic)
+	for submission in sub_reddit.hot(limit=3):
+		word_dict = {}
+		submission_post = submission.title
+		word_dict['post'] = submission_post		
+		comment_body = []
+		for comment in submission.comments[:5]:	
+			if hasattr(comment, "body"):
+				comment_body.append(comment.body)
+		word_dict['comments'] = comment_body
+		final_list.append(word_dict)
+
+	with open(topic+".json", "w+") as f:
+		json.dump(final_list, f, indent = 2)
+
+
+# function to scrape the respective file and analyze the comments
+def second_func(topic): # analyze comments
+	item = topic+'.json'
+	if not os.path.isfile(item): 
+		first_func(topic)
+	sentence = ''
+	ws =[]
+	data =  parse_(item) # parse the subreddit file
+	for i in range(0,len(data)):
+		for j in range(0, len(data[i]['comments'])):
+			for word in data[i]['comments'][j]:
+				sentence = sentence+word
+	for w in sentence.split():
+		if w not in stop_words:
+			ws.append(w)
+	x =  count_keywords(ws)
+	return x
 
 
 # Dump the json response and also print the keywords for comments
@@ -82,11 +121,10 @@ def if_file(topic):
 	else:
 		return commenters_info_and_comment(topic) 
 
-
 	
 # Count the number of times a phrase was repeated
 def count_keywords(final_string):
-	ngrams = list(nltk.ngrams(final_string.split(), n=2))
+	ngrams = list(nltk.ngrams(final_string, n=2))
 	ngrams_count = {i : ngrams.count(i) for i in ngrams}
 
 	return sort_keywords_count(ngrams_count)
@@ -104,8 +142,3 @@ def sort_keywords_count(keyword_count):
 		final_list.append(keywords_dict)
 		keywords_dict = {}
 	return final_list	
-
-
-# Input the subreddit title
-topic = input("Enter the topic: ")
-if_file(topic)
