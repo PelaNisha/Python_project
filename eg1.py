@@ -28,12 +28,13 @@ def get_info():
 	Headers = {"Authorization":bearer_token,"User-Agent":user_agent,"x-guest-token" : token}
 	response = requests.get(url, headers=Headers)
 	if response.status_code != 200:
+		print("hello")
 		token = get_guest_token()
 		f = open('token.json', 'r+')
 		f.truncate(0) 
 		save_to_file(token, 'token.json')
 		get_info()
-		print("hello")
+		
 	# print("Status Code", response.status_code)
 	return response.json()
 
