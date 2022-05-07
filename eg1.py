@@ -1,53 +1,56 @@
 import requests
+import os 
 import json
-import os
-from pathlib import Path
-
-def search(URL, a):
-    url = URL+a
-    timeout = 5
-    try:
-        response= requests.get(url, timeout=timeout)
-        data = response.json()
-        return data
-
-    except requests.exceptions.RequestException as e:  
-        return {'type': 'error', 'error': 'Unknown error occured'}
-
-def search_item(arg, i):
-    item = arg+".json"
-    if os.path.isfile(item):
-        with open(item, 'r') as f:
-            data = json.loads(f.read())
-            return {'type': 'success', 'data': data}
-    else:
-     return append_json(arg,i)   
-
-def parsh_json(response):
-    lst=[]
-    for item in response["data"]:
-        char ={
-            'title': item['title'],
-            'pub-data': item['publishOn'],
-            'author':item['author']['name'],
-        }
-        lst.append(char)
-    return lst
-
-def append_json(a, i):
-    mainList = []
-    for n in range(1,int(i)+1):    
-        url = "https://bg.annapurnapost.com/api/tags/news?page="+str(n)+"&per_page=20&tag="
-        result = search(url,a)
-        with open(a+".json", "w+") as f:
-            mainList.extend(parsh_json(result))
-            json.dump(mainList, f, indent = 4)
-    return {'type': 'success', 'data': mainList}      
 
 
-argument = input("Enter the search item\n")
-i = input("Enter the number of pages\n")#added page input for user
+bearer_token = os.environ.get("BEARER_TOKEN")
+user_agent = os.environ.get("User-Agent")
+
+def read_file(file):
+	with open(file, 'r') as f:
+		data = json.loads(f.read())
+		return data
+		
+def get_guest_token():
+
+	url = "	https://api.twitter.com/1.1/guest/activate.json"
+	Headers = {"Authorization":bearer_token, 'User-Agent':'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:99.0) Gecko/20100101 Firefox/99.0','content-type':'application/x-www-form-urlencoded'}
+	
+	response = requests.post(url, headers=Headers)
+	b = response.json()
+	token = b['guest_token']
+	return token
 
 
-p =search_item(argument,i)
-print(p)
+def get_info():	
+	token = read_file('token.json')
+	url = 'https://twitter.com/i/api/graphql/Bhlf1dYJ3bYCKmLfeEQ31A/UserByScreenName?variables={"screen_name":"narendramodi","withSafetyModeUserFields":true,"withSuperFollowsUserFields":true}'
+	Headers = {"Authorization":bearer_token,"User-Agent":user_agent,"x-guest-token" : token}
+	response = requests.get(url, headers=Headers)
+	if response.status_code != 200:
+		token = get_guest_token()
+		f = open('token.json', 'r+')
+		f.truncate(0) 
+		save_to_file(token, 'token.json')
+		get_info()
+		print("hello")
+	# print("Status Code", response.status_code)
+	return response.json()
+
+
+def save_to_file(final_result,filename):
+	with open(filename, "w+") as f:
+		json.dump(final_result, f, indent = 2)
+
+
+def get_user_data(x):
+	y = x['data']['user']['result']['legacy']
+	output = {'created at':y['created_at'], "description":y["description"],"followers_count":y["followers_count"],
+			 "friends_count":y[ "friends_count"],"location":y["location"],"name":y["name"],}
+	return output
+
+
+x = get_info()
+o = get_user_data(x)
+save_to_file(o, 'file.json')
+# get_guest_token()
